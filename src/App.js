@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams,
+} from "react-router-dom";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <ul>
+          <li>
+            <Link to="/photo">Галерея</Link>
+          </li>
+          <li>
+            <Link to="/profile">Профиль</Link>
+          </li>
+          <li>
+            <Link to="/logout">Выйти</Link>
+          </li>
+        </ul>
+
+        <Switch>
+          <Route path="/">
+            <Home />
+          </Route>
+          <Route path="/photo">
+            <PhotoPage />
+          </Route>
+          <Route path="/profile">
+            <ProfilePage />
+          </Route>
+          <Route path="/auth">
+            <AuthPage />
+          </Route>
+          <Route path="/logout">
+            <Logout />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
-export default App;
+function Photo() {
+  let { photoId } = useParams();
+  return <h3>Requested photo ID: {photoId}</h3>;
+}
