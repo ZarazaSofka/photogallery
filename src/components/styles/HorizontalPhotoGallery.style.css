@@ -1,0 +1,24 @@
+.horizontal-photo-gallery {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.gallery-wrapper {
+  display: flex;
+  overflow-x: auto;
+}
+
+.gallery {
+  display: inline-flex;
+  flex-wrap: nowrap;
+}
+
+.photo-wrapper {
+  margin-right: 1rem;
+}
+
+.photo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
