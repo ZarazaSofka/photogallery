@@ -1,20 +1,21 @@
 import { readCompressedPhoto } from "../api/photo";
 
-export default function CompressedPhotoContainer({ photo, onClick }) {
-  const [compressedPhotoUrl, setCompressedPhotoUrl] = useState(null);
+import { useQuery } from "react-query";
 
-  useEffect(() => {
-    (async () => {
-      const res = readCompressedPhoto(photo.id);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      setCompressedPhotoUrl(url);
-    })();
-  }, [photo.id]);
+export default function CompressedPhotoContainer({ photo, onClick }) {
+  const { data, isLoading } = useQuery(
+    ["compressedPhoto", photo.id],
+    () => readCompressedPhoto(photo.id),
+    { keepPreviousData: true }
+  );
+
+  if (isLoading) {
+    return <div className="compressed-photo-container" />;
+  }
 
   return (
     <div className="compressed-photo-container" onClick={onClick}>
-      <img src={compressedPhotoUrl} alt={photo.title} />
+      <img src={URL.createObjectURL(data)} alt={photo.title} />
     </div>
   );
 }

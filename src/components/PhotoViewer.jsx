@@ -26,7 +26,7 @@ export default function PhotoViewer({ photo, user, onClose }) {
       <img src={photoUrl} alt={photo.title} className="photo-viewer__photo" />
       <div className="photo-viewer__info">
         <Link to={`/profile/${photo.user.id}`} className="photo-viewer__author">
-          {isMe(user, photo.user.id) ? "Вы" : photo.user.id}
+          {isMe(user, photo.user.id) ? "Вы" : photo.user.login}
         </Link>
         <h3 className="photo-viewer__title">{photo.title}</h3>
         <div className="photo-viewer__actions">

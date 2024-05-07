@@ -15,7 +15,7 @@ export default function PhotoContainer({ photo, onClick }) {
 
   return (
     <div className="photo-container" onClick={onClick}>
-      <Link to={`/user/${photo.user_id}`}>
+      <Link to={`/user/${photo.user.id}`}>
         <img src={photoUrl} alt={photo.title} />
       </Link>
     </div>

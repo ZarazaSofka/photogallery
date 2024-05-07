@@ -7,7 +7,23 @@ const api = axios.create({
   },
 });
 
-export const readPhotosData = async () => (await api.get("/photo")).data;
+export const readUserPhotos = async (userId) => {
+  const { data } = await api.get(`/photo/user/${userId}`);
+  return data;
+};
+
+export const readPopularPhotos = async () => {
+  const { data } = await api.get(`/photo/popular`);
+  return data;
+};
+
+export const readLatestPhotos = async () => {
+  const { data } = await api.get(`/photo/latest`);
+  return data;
+};
+
+export const readPhotos = async () => (await api.get(`/photo`)).data;
+
 export const readPhoto = async (id) => (await api.get(`/photo/${id}`)).data;
 export const readCompressedPhoto = async (id) =>
   (await api.get(`/photo/${id}/compressed`)).data;
