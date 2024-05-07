@@ -5,9 +5,11 @@ import { useQuery } from "react-query";
 import { readPhoto } from "../api/photo";
 
 export default function ProfilePhoto({ user }) {
-  const { photoUrl } = useQuery(["ProfilePhoto", user.photo_id], () =>
-    URL.createObjectURL(readPhoto(user.photo_id).blob)
-  );
+  console.log("ProfilePhoto: rendering with user", user);
+  const { photoUrl } = useQuery(["ProfilePhoto", user.photo_id], () => {
+    console.log("ProfilePhoto: fetching photo", user.photo_id);
+    return URL.createObjectURL(readPhoto(user.photo_id).blob);
+  });
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,20 +24,34 @@ export default function ProfilePhoto({ user }) {
     },
   };
 
+  console.log("ProfilePhoto: rendering isOpen", isOpen);
+
   return (
     <div className="profile-photo-wrapper">
       <img
         src={photoUrl}
         alt="profile photo"
         className="profile-photo"
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          console.log("ProfilePhoto: opening modal");
+          setIsOpen(true);
+        }}
       />
       <ReactModal
         isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
+        onRequestClose={() => {
+          console.log("ProfilePhoto: closing modal");
+          setIsOpen(false);
+        }}
         style={customStyles}
       >
-        <ChangePhotoWindow user={user} onClose={() => setIsOpen(false)} />
+        <ChangePhotoWindow
+          user={user}
+          onClose={() => {
+            console.log("ProfilePhoto: closing modal from ChangePhotoWindow");
+            setIsOpen(false);
+          }}
+        />
       </ReactModal>
     </div>
   );

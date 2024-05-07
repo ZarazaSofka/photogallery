@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import PhotoContainer from "./PhotoContainer";
 
-export default function VerticalPhotoGallery({ photos }) {
-  const [numberOfContainers, setNumberOfContainers] = useState(10);
-  const [loadMore, setLoadMore] = useState(false);
+export default function VerticalPhotoGallery({ photos, onLoadMore }) {
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleScroll = () => {
+  const handleScroll = async () => {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    if (scrollTop + clientHeight > scrollHeight * 0.9 && !loadMore) {
-      setLoadMore(true);
-      setTimeout(() => {
-        setNumberOfContainers(numberOfContainers + 10);
-        setLoadMore(false);
-      }, 1000);
+    if (scrollTop + clientHeight > scrollHeight * 0.9 && !isLoading) {
+      setIsLoading(true);
+      try {
+        await onLoadMore(photos[photos.length - 1].id);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -20,7 +22,7 @@ export default function VerticalPhotoGallery({ photos }) {
 
   return (
     <div className="vertical-photo-gallery">
-      {photos.slice(0, numberOfContainers).map((photo) => (
+      {photos.map((photo) => (
         <PhotoContainer key={photo.id} photo={photo} isCombined={false} />
       ))}
     </div>

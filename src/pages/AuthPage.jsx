@@ -6,20 +6,30 @@ import LoginForm from "../components/LoginForm";
 
 export default function AuthPage() {
   const [isRegister, setIsRegister] = useState(false);
+  console.log("Rendering AuthPage");
+  console.log("isRegister:", isRegister);
   return (
     <div>
-      <Header />
+      <Header user={null} />
       <div className="container">
         <div className="buttons">
           <button
             className={isRegister ? "active" : ""}
-            onClick={() => setIsRegister(true)}
+            onClick={() => {
+              console.log("Clicked Register button");
+              setIsRegister(true);
+            }}
+            disabled={isRegister}
           >
             Регистрация
           </button>
           <button
             className={isRegister ? "" : "active"}
-            onClick={() => setIsRegister(false)}
+            onClick={() => {
+              console.log("Clicked Login button");
+              setIsRegister(false);
+            }}
+            disabled={!isRegister}
           >
             Вход
           </button>

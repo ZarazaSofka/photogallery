@@ -26,3 +26,7 @@ export function getUserFromLocalStorage() {
   }
   return null;
 }
+
+export function deleteUserFromLocalStorage() {
+  localStorage.removeItem("user");
+}

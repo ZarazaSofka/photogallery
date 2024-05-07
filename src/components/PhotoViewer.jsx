@@ -6,15 +6,20 @@ export default function PhotoViewer({ photo, user, onClose }) {
   const [photoUrl, setPhotoUrl] = useState(null);
 
   useEffect(() => {
+    console.log("PhotoViewer useEffect started");
     (async () => {
+      console.log("Reading photo", photo.id);
       const res = await readPhoto(photo.id);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       setPhotoUrl(url);
+      console.log("Photo read, setting photoUrl", photoUrl);
     })();
+    console.log("PhotoViewer useEffect finished");
   }, [photo.id]);
 
   const deleteHandler = (event) => {
+    console.log("deleteHandler called");
     event.preventDefault();
     deletePhoto(photo.id);
     onClose();

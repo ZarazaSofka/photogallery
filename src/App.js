@@ -6,46 +6,41 @@ import {
   Link,
   useParams,
 } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
+import AuthPage from "./pages/AuthPage";
+import PhotoSetPage from "./pages/PhotoSetPage";
+import PhotoGalleryPage from "./pages/PhotoGalleryPage";
+import { getUserFromLocalStorage } from "./auth";
 
 export default function App() {
+  const user = getUserFromLocalStorage();
+
   return (
     <Router>
-      <div>
-        <ul>
-          <li>
-            <Link to="/photo">Галерея</Link>
-          </li>
-          <li>
-            <Link to="/profile">Профиль</Link>
-          </li>
-          <li>
-            <Link to="/logout">Выйти</Link>
-          </li>
-        </ul>
-
-        <Switch>
-          <Route path="/">
-            <Home />
-          </Route>
-          <Route path="/photo">
-            <PhotoPage />
-          </Route>
-          <Route path="/profile">
-            <ProfilePage />
-          </Route>
-          <Route path="/auth">
-            <AuthPage />
-          </Route>
-          <Route path="/logout">
-            <Logout />
-          </Route>
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/" component={() => <HomePage user={user} />} />
+        <Route
+          path="/gallery"
+          component={() => <PhotoGalleryPage user={user} />}
+        />
+        <Route
+          path="/profile/:userId"
+          component={() => <ProfilePage user={user} />}
+        />
+        <Route
+          path="/profile/:userId"
+          component={() => <PhotoSetPage user={user} />}
+        />
+        <Route
+          path="/logout"
+          render={() => (user ? <Logout /> : <Redirect to="/auth" />)}
+        />
+        <Route
+          path="/auth"
+          render={() => (user ? <Redirect to="/" /> : <AuthPage />)}
+        />
+      </Switch>
     </Router>
   );
-}
-
-function Photo() {
-  let { photoId } = useParams();
-  return <h3>Requested photo ID: {photoId}</h3>;
 }

@@ -9,6 +9,7 @@ export default function ChangePhotoWindow({ user, onClose }) {
     (formData) => changeProfilePhoto(user.id, formData),
     {
       onSuccess: () => {
+        console.log("ChangePhotoWindow: successfully changed profile photo");
         queryClient.invalidateQueries("profilePhoto");
         onClose();
       },
@@ -16,6 +17,7 @@ export default function ChangePhotoWindow({ user, onClose }) {
   );
 
   const handleSubmit = (event) => {
+    console.log("ChangePhotoWindow: handling form submit");
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     mutation.mutate(formData);

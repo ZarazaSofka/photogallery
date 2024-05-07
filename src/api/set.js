@@ -14,3 +14,6 @@ export const deletePhotoFromSet = async (set_id, photo_id) =>
   (await api.delete(`/set/${set_id}/photos/${photo_id}`)).data;
 
 export const getNewSets = async () => (await api.get(`/set/new`)).data;
+
+export const readUserSets = async (userId) =>
+  (await api.get(`/set/user/${userId}`)).data;

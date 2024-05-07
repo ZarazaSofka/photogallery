@@ -9,7 +9,12 @@ export default function CompressedPhotoContainer({ photo, onClick }) {
     { keepPreviousData: true }
   );
 
+  console.log("CompressedPhotoContainer: render", photo.id);
+  console.log("CompressedPhotoContainer: isLoading", isLoading);
+  console.log("CompressedPhotoContainer: data", data);
+
   if (isLoading) {
+    console.log("CompressedPhotoContainer: render loading...");
     return <div className="compressed-photo-container" />;
   }
 
