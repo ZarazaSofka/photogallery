@@ -29,7 +29,7 @@ export default function App() {
           component={() => <ProfilePage user={user} />}
         />
         <Route
-          path="/profile/:userId"
+          path="/set/:setId"
           component={() => <PhotoSetPage user={user} />}
         />
         <Route

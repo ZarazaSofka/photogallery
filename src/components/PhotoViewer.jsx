@@ -21,7 +21,7 @@ export default function PhotoViewer({ photo, user, onClose }) {
   const deleteHandler = (event) => {
     console.log("deleteHandler called");
     event.preventDefault();
-    deletePhoto(photo.id);
+    deletePhoto(user.id, photo.id);
     onClose();
   };
 

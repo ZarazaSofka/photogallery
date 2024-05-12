@@ -11,25 +11,36 @@ import CompressedPhotoGallery from "../components/CompressedPhotoGallery";
 
 export default function ProfilePage({ user }) {
   const { userId } = useParams();
-
-  const { data: profileData } = useQuery(["user", userId], () =>
-    readUser(userId)
+  console.log("ProfilePage: render", userId);
+  const { data: profileData } = useQuery(
+    ["user", userId],
+    () => readUser(userId),
+    {
+      onError: (error) => console.error(error),
+    }
   );
-  const { data: photos } = useQuery(["userPhotos", userId], () =>
-    readUserPhotos(userId)
+  console.log("ProfilePage: profileData", profileData);
+  const { data: photos, setData: setPhotos } = useQuery(
+    ["userPhotos", userId],
+    () => readUserPhotos(userId),
+    {
+      onError: (error) => console.error(error),
+    }
   );
-  const { data: sets } = useQuery(["userSets", userId], () =>
-    readUserSets(userId)
+  console.log("ProfilePage: photos", photos);
+  const { data: sets, setData: setSets } = useQuery(
+    ["userSets", userId],
+    () => readUserSets(userId),
+    {
+      onError: (error) => console.error(error),
+    }
   );
+  console.log("ProfilePage: sets", sets);
 
   const [activeTab, setActiveTab] = React.useState("photos");
-
-  console.log("ProfilePage re-rendered");
-  console.log("userId", userId);
-  console.log("profileData", profileData);
-  console.log("photos", photos);
-  console.log("sets", sets);
-  console.log("activeTab", activeTab);
+  const [isAddPhotoWindowOpen, setIsAddPhotoWindowOpen] = React.useState(false);
+  const [isCreateSetWindowOpen, setIsCreateSetWindowOpen] =
+    React.useState(false);
 
   return (
     <>
@@ -38,10 +49,47 @@ export default function ProfilePage({ user }) {
         <ProfilePhoto user={profileData} />
         <div className="profile-data-container__data">
           <div className="profile-data-container__login">
-            {profileData.login}
+            {profileData?.login ?? "User not found"}
           </div>
+          {isMe(user, userId) && (
+            <div className="profile-data-container__buttons">
+              <button
+                onClick={() => setIsAddPhotoWindowOpen(!isAddPhotoWindowOpen)}
+              >
+                Добавить фотографию
+              </button>
+              <button
+                onClick={() => setIsCreateSetWindowOpen(!isCreateSetWindowOpen)}
+              >
+                Создать набор
+              </button>
+            </div>
+          )}
         </div>
       </div>
+      {isAddPhotoWindowOpen && (
+        <AddPhotoWindow
+          user={user}
+          isOpen={isAddPhotoWindowOpen}
+          onClose={() => setIsAddPhotoWindowOpen(false)}
+          onAdd={(addedPhoto) => {
+            setPhotos((photos) =>
+              photos ? [addedPhoto, ...photos] : [addedPhoto]
+            );
+          }}
+        />
+      )}
+      {isCreateSetWindowOpen && (
+        <CreateSetWindow
+          user={user}
+          isOpen={isCreateSetWindowOpen}
+          onClose={() => setIsCreateSetWindowOpen(false)}
+          userId={userId}
+          onCreate={(newSet) => {
+            setSets((sets) => (sets ? [newSet, ...sets] : [newSet]));
+          }}
+        />
+      )}
       <div className="profile-container">
         <div className="profile-container__buttons">
           <button
@@ -57,10 +105,16 @@ export default function ProfilePage({ user }) {
             Наборы
           </button>
         </div>
-        {activeTab === "photos" && <CompressedPhotoGallery photos={photos} />}
+        {activeTab === "photos" && (
+          <>
+            <p>Active tab: photos</p>
+            <CompressedPhotoGallery photos={photos} />
+          </>
+        )}
         {activeTab === "sets" && (
           <div className="set-list">
-            {sets.map((set) => (
+            <p>Active tab: sets</p>
+            {sets?.map((set) => (
               <div key={set.id} className="set-link">
                 <Link to={`/set/${set.id}`}>{set.title}</Link>
               </div>

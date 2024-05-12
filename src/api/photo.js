@@ -1,35 +1,34 @@
 import axios from "axios";
 import config from "../config";
 const api = axios.create({
-  baseURL: config.baseUrl,
+  baseURL: `${config.baseUrl}/photo`,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 export const readUserPhotos = async (userId) => {
-  const { data } = await api.get(`/photo/user/${userId}`);
+  const { data } = await api.get(`/user/${userId}`);
   return data;
 };
 
 export const readPopularPhotos = async () => {
-  const { data } = await api.get(`/photo/popular`);
+  const { data } = await api.get(`/popular`);
   return data;
 };
 
 export const readLatestPhotos = async () => {
-  const { data } = await api.get(`/photo/latest`);
+  const { data } = await api.get(`/latest`);
   return data;
 };
 
-export const readPhotos = async () => (await api.get(`/photo`)).data;
+export const readPhotos = async (lastId = null) =>
+  (await api.get(`/${lastId ? `?last=${lastId}` : ""}`)).data;
 
-export const readPhoto = async (id) => (await api.get(`/photo/${id}`)).data;
+export const readPhoto = async (id) => (await api.get(`/${id}`)).data;
 export const readCompressedPhoto = async (id) =>
-  (await api.get(`/photo/${id}/compressed`)).data;
-export const createPhoto = async (photo) =>
-  (await api.post("/photo", photo)).data;
-export const updatePhoto = async (id, photo) =>
-  (await api.put(`/photo/${id}`, photo)).data;
-export const deletePhoto = async (id) =>
-  (await api.delete(`/photo/${id}`)).data;
+  (await api.get(`/${id}/compressed`)).data;
+export const createPhoto = async (formData) =>
+  (await api.post("/", formData)).data;
+export const deletePhoto = async (user, id) =>
+  (await api.delete(`/${id}`, { params: user })).data;
