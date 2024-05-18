@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import ProfilePhoto from "../components/ProfilePhoto";
-import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useQuery, useQueryClient } from "react-query";
+import { useParams, Link } from "react-router-dom";
 import { readUser } from "../api/user";
 import { readUserPhotos } from "../api/photo";
 import { readUserSets } from "../api/set";
 import Footer from "../components/Footer";
 import CompressedPhotoGallery from "../components/CompressedPhotoGallery";
+import AddPhotoWindow from "../components/AddPhotoWindow";
+import CreateSetWindow from "../components/CreateSetWindow";
+import { isMe, useUser } from "../auth";
+import "./styles/ProfilePage.style.css";
 
-export default function ProfilePage({ user }) {
+export default function ProfilePage() {
+  const { user } = useUser();
   const { userId } = useParams();
-  console.log("ProfilePage: render", userId);
+  const queryClient = useQueryClient();
+
   const { data: profileData } = useQuery(
     ["user", userId],
     () => readUser(userId),
@@ -19,34 +25,46 @@ export default function ProfilePage({ user }) {
       onError: (error) => console.error(error),
     }
   );
-  console.log("ProfilePage: profileData", profileData);
-  const { data: photos, setData: setPhotos } = useQuery(
+
+  const { data: photos } = useQuery(
     ["userPhotos", userId],
     () => readUserPhotos(userId),
     {
       onError: (error) => console.error(error),
     }
   );
-  console.log("ProfilePage: photos", photos);
-  const { data: sets, setData: setSets } = useQuery(
+
+  const { data: sets } = useQuery(
     ["userSets", userId],
     () => readUserSets(userId),
     {
       onError: (error) => console.error(error),
     }
   );
-  console.log("ProfilePage: sets", sets);
 
-  const [activeTab, setActiveTab] = React.useState("photos");
-  const [isAddPhotoWindowOpen, setIsAddPhotoWindowOpen] = React.useState(false);
-  const [isCreateSetWindowOpen, setIsCreateSetWindowOpen] =
-    React.useState(false);
+  const [activeTab, setActiveTab] = useState("photos");
+  const [isAddPhotoWindowOpen, setIsAddPhotoWindowOpen] = useState(false);
+  const [isCreateSetWindowOpen, setIsCreateSetWindowOpen] = useState(false);
+
+  const handleAddPhoto = (addedPhotoId) => {
+    queryClient.setQueryData(["userPhotos", userId], (prevData) => [
+      addedPhotoId,
+      ...(prevData || []),
+    ]);
+  };
+
+  const handleCreateSet = (newSet) => {
+    queryClient.setQueryData(["userSets", userId], (prevData) => [
+      newSet,
+      ...(prevData || []),
+    ]);
+  };
 
   return (
     <>
       <Header />
       <div className="profile-data-container">
-        <ProfilePhoto user={profileData} />
+        {profileData && <ProfilePhoto profileData={profileData} />}
         <div className="profile-data-container__data">
           <div className="profile-data-container__login">
             {profileData?.login ?? "User not found"}
@@ -55,11 +73,13 @@ export default function ProfilePage({ user }) {
             <div className="profile-data-container__buttons">
               <button
                 onClick={() => setIsAddPhotoWindowOpen(!isAddPhotoWindowOpen)}
+                сlassName="add-photo-button"
               >
                 Добавить фотографию
               </button>
               <button
                 onClick={() => setIsCreateSetWindowOpen(!isCreateSetWindowOpen)}
+                сlassName="create-set-button"
               >
                 Создать набор
               </button>
@@ -67,27 +87,19 @@ export default function ProfilePage({ user }) {
           )}
         </div>
       </div>
-      {isAddPhotoWindowOpen && (
+      {user && (
         <AddPhotoWindow
-          user={user}
           isOpen={isAddPhotoWindowOpen}
           onClose={() => setIsAddPhotoWindowOpen(false)}
-          onAdd={(addedPhoto) => {
-            setPhotos((photos) =>
-              photos ? [addedPhoto, ...photos] : [addedPhoto]
-            );
-          }}
+          onAdd={handleAddPhoto}
         />
       )}
-      {isCreateSetWindowOpen && (
+      {user && (
         <CreateSetWindow
-          user={user}
           isOpen={isCreateSetWindowOpen}
           onClose={() => setIsCreateSetWindowOpen(false)}
           userId={userId}
-          onCreate={(newSet) => {
-            setSets((sets) => (sets ? [newSet, ...sets] : [newSet]));
-          }}
+          onCreate={handleCreateSet}
         />
       )}
       <div className="profile-container">
@@ -95,29 +107,43 @@ export default function ProfilePage({ user }) {
           <button
             onClick={() => setActiveTab("photos")}
             disabled={activeTab === "photos"}
+            className={activeTab === "photos" ? "active" : ""}
           >
             Фотографии
           </button>
           <button
             onClick={() => setActiveTab("sets")}
             disabled={activeTab === "sets"}
+            className={activeTab === "sets" ? "active" : ""}
           >
             Наборы
           </button>
         </div>
         {activeTab === "photos" && (
-          <>
-            <p>Active tab: photos</p>
-            <CompressedPhotoGallery photos={photos} />
-          </>
+          <div className="content-wrapper">
+            <p className="content-wrapper__title">Фотографии пользователя:</p>
+            <CompressedPhotoGallery
+              photosKey={["userPhotos", userId]}
+              photos={photos}
+            />
+          </div>
         )}
         {activeTab === "sets" && (
-          <div className="set-list">
-            <p>Active tab: sets</p>
+          <div className="content-wrapper">
+            <p className="content-wrapper__title">Наборы пользователя:</p>
             {sets?.map((set) => (
-              <div key={set.id} className="set-link">
-                <Link to={`/set/${set.id}`}>{set.title}</Link>
-              </div>
+              <Link
+                key={set.id}
+                to={`/set/${set.id}`}
+                className="set-container-link"
+              >
+                <div className="set-container">
+                  <div className="set-container__name">{set.name}</div>
+                  <div className="set-container__length">
+                    Количество фотографий: {set.photoList.length}
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         )}

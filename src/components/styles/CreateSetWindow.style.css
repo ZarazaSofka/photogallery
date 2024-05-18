@@ -1,0 +1,58 @@
+.create-set-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px; /* Ширина модального окна */
+  z-index: 1000;
+}
+
+.create-set-window-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999; /* Установите z-index, чтобы оверлей был поверх остального содержимого */
+}
+
+.create-set-window__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-set-window__label {
+  margin-bottom: 10px;
+}
+
+.create-set-window__label input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.create-set-window__submit,
+.create-set-window__cancel {
+  padding: 8px 16px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.create-set-window__submit {
+  background-color: #007bff;
+  color: white;
+}
+
+.create-set-window__cancel {
+  background-color: #ccc;
+  color: #333;
+}

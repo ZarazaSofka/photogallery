@@ -1,0 +1,9 @@
+.homepage-gallery-wrapper {
+  margin: 4vh 5vw; /* Отступ сверху и снизу между блоками галерей */
+}
+
+.homepage-gallery-wrapper__title {
+  font-size: 24px; /* Размер заголовка */
+  font-weight: bold; /* Жирный шрифт */
+  margin-bottom: 10px; /* Отступ снизу от заголовка */
+}

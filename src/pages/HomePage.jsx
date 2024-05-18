@@ -3,34 +3,38 @@ import Header from "../components/Header";
 import HorizontalPhotoGallery from "../components/HorizontalPhotoGallery";
 import Footer from "../components/Footer";
 import { useQuery } from "react-query";
-import { getPopularPhotos, getLastPhotos } from "../api/photo";
+import { readPopularPhotos, readLatestPhotos } from "../api/photo";
 import { getNewSets } from "../api/set";
 import HorizontalSetGallery from "../components/HorizontalSetGallery";
+import "./styles/HomePage.style.css";
 
-export default function HomePage({ user }) {
-  const { data: popularPhotos } = useQuery("popularPhotos", getPopularPhotos);
-  const { data: lastPhotos } = useQuery("lastPhotos", getLastPhotos);
+export default function HomePage() {
+  const { data: popularPhotos } = useQuery("popularPhotos", readPopularPhotos);
+  const { data: lastPhotos } = useQuery("lastPhotos", readLatestPhotos);
   const { data: newSets } = useQuery("newSets", getNewSets);
 
   console.log("HomePage: render");
-  console.log("user", user);
   console.log("popularPhotos", popularPhotos);
   console.log("lastPhotos", lastPhotos);
   console.log("newSets", newSets);
 
   return (
     <>
-      <Header user={user} />
-      <div className="popular-photos">
-        <div className="title">Набирающие популярность:</div>
+      <Header />
+      <div className="homepage-gallery-wrapper">
+        <div className="homepage-gallery-wrapper__title">
+          Набирающие популярность:
+        </div>
         <HorizontalPhotoGallery photos={popularPhotos} />
       </div>
-      <div className="new-sets">
-        <div className="title">Новые наборы:</div>
+      <div className="homepage-gallery-wrapper">
+        <div className="homepage-gallery-wrapper__title">Новые наборы:</div>
         <HorizontalSetGallery sets={newSets} />
       </div>
-      <div className="last-photos">
-        <div className="title">Последние фотографии:</div>
+      <div className="homepage-gallery-wrapper">
+        <div className="homepage-gallery-wrapper__title">
+          Последние фотографии:
+        </div>
         <HorizontalPhotoGallery photos={lastPhotos} />
       </div>
       <Footer />

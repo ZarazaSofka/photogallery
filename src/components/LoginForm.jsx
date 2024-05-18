@@ -1,40 +1,49 @@
 import React, { useState } from "react";
-import { loginUser } from "../api/user";
-import { useHistory } from "react-router-dom";
+import { login } from "../api/user";
+import { useNavigate } from "react-router-dom";
+import { saveUserToLocalStorage, useUser } from "../auth";
+import "./styles/AuthForm.style.css";
 
-export default function LoginForm({ onLogin }) {
-  const [userData, setUserData] = useState({ login: "", password: "" });
-  const history = useHistory();
+export default function LoginForm() {
+  const { updateUser } = useUser();
+  const [userData, setUserData] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
 
   const [warning, setWarning] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = await loginUser(userData);
-    const isSuccess = saveUserToLocalStorage(user);
-    if (isSuccess) {
-      onLogin(user);
-      history.goBack();
-    } else {
-      setWarning("Неверное имя пользователя или пароль");
+
+    try {
+      const user = await login(userData);
+      console.log("Пользователь успешно авторизован:", user);
+
+      saveUserToLocalStorage(user);
+      updateUser(user);
+      navigate(-1);
+    } catch (error) {
+      setWarning(error.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {warning && <p style={{ color: "red" }}>{warning}</p>}
-      <label>
-        Login:
+    <form onSubmit={handleSubmit} className="auth-form">
+      {warning && <p className="warning-text">{warning}</p>}
+      <label className="form-label">
+        Имя пользователя:
         <input
           type="text"
-          value={userData.login}
-          onChange={(e) => setUserData({ ...userData, login: e.target.value })}
+          value={userData.username}
+          onChange={(e) =>
+            setUserData({ ...userData, username: e.target.value })
+          }
           minLength="4"
           required
+          className="form-input"
         />
       </label>
-      <label>
-        Password:
+      <label className="form-label">
+        Пароль:
         <input
           type="password"
           value={userData.password}
@@ -43,9 +52,12 @@ export default function LoginForm({ onLogin }) {
           }
           minLength="8"
           required
+          className="form-input"
         />
       </label>
-      <button type="submit">Login</button>
+      <button type="submit" className="submit-button">
+        Login
+      </button>
     </form>
   );
 }

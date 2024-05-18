@@ -1,30 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useCallback } from "react";
 import PhotoContainer from "./PhotoContainer";
+import "./styles/VerticalPhotoGallery.style.css";
 
-export default function VerticalPhotoGallery({ photos, onLoadMore }) {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleScroll = async () => {
+const VerticalPhotoGallery = ({ photos, onLoadMore, canLoadMore, loading }) => {
+  const handleScroll = useCallback(() => {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    if (scrollTop + clientHeight > scrollHeight * 0.9 && !isLoading) {
-      setIsLoading(true);
-      try {
-        await onLoadMore(photos[photos.length - 1].id);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
+    if (
+      canLoadMore &&
+      scrollTop + clientHeight >= scrollHeight - 300 &&
+      !loading
+    ) {
+      onLoadMore();
     }
-  };
+  }, [loading, onLoadMore]);
 
-  window.addEventListener("scroll", handleScroll);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]);
 
   return (
     <div className="vertical-photo-gallery">
-      {photos.map((photo) => (
-        <PhotoContainer key={photo.id} photo={photo} isCombined={false} />
+      {photos.map((photoId) => (
+        <PhotoContainer key={photoId} photoId={photoId} isCombined={false} />
       ))}
+      {loading && <div className="loading">Loading...</div>}
     </div>
   );
-}
+};
+
+export default VerticalPhotoGallery;

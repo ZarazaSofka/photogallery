@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { createPhoto } from "../api/photo";
 import ReactModal from "react-modal";
+import "./styles/AddPhotoWindow.style.css";
 
-export default function AddPhotoWindow({ user, isOpen, onClose, onAdd }) {
+export default function AddPhotoWindow({ isOpen, onClose, onAdd }) {
   const [imageSrc, setImageSrc] = useState(null);
   const [description, setDescription] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    formData.append("userId", user.id);
-    const photo = await createPhoto({ formData });
-    onAdd(photo);
-    onClose();
+    const photoId = await createPhoto(formData);
+    onAdd(photoId);
+    handleCancel();
   };
 
   const handleCancel = () => {
@@ -38,7 +38,9 @@ export default function AddPhotoWindow({ user, isOpen, onClose, onAdd }) {
     <ReactModal
       isOpen={isOpen}
       className="add-photo-window"
+      overlayClassName="add-photo-window-overlay"
       contentLabel="Добавление фото"
+      appElement={document.getElementById("root")}
     >
       <button className="close-button" onClick={handleCancel} />
       <form onSubmit={handleSubmit} encType="multipart/form-data">

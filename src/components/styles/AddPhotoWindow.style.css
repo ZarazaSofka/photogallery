@@ -1,0 +1,93 @@
+.add-photo-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px; /* Ширина модального окна */
+  max-width: 90%; /* Максимальная ширина модального окна */
+  z-index: 1000;
+}
+
+.add-photo-window-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999; /* Установите z-index, чтобы оверлей был поверх остального содержимого */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.close-button:before,
+.close-button:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 2px;
+  background-color: #333;
+  transform-origin: 50% 50%;
+}
+
+.close-button:before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-button:after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.add-photo-window__image-preview-wrapper {
+  margin-bottom: 20px;
+}
+
+.add-photo-window__image-preview-wrapper img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.add-photo-window__input {
+  margin-bottom: 10px;
+}
+
+.add-photo-window__description {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.add-photo-window__submit {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  outline: none;
+}
+
+.add-photo-window__submit:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

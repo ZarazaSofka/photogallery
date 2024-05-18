@@ -1,17 +1,21 @@
+import { Link } from "react-router-dom";
+import "@fortawesome/fontawesome-free/css/all.css";
+import "./styles/Footer.style.css";
+
 function Footer() {
   return (
     <footer>
       <div className="row">
-        <a href="#">
+        <a href="https://www.instagram.com">
           <i className="fa fa-instagram" />
         </a>
-        <a href="#">
+        <a href="https://twitter.com">
           <i className="fa fa-twitter" />
         </a>
-        <a href="#">
+        <a href="https://www.linkedin.com">
           <i className="fa fa-linkedin" />
         </a>
-        <a href="#">
+        <a href="https://www.facebook.com">
           <i className="fa fa-facebook" />
         </a>
       </div>
@@ -19,16 +23,10 @@ function Footer() {
       <div className="row">
         <ul>
           <li>
-            <a href="index.html">Home</a>
+            <Link to="/">Главная</Link>
           </li>
           <li>
-            <a href="contacts.html">Contact us</a>
-          </li>
-          <li>
-            <a href="#">Privacy Policy</a>
-          </li>
-          <li>
-            <a href="#">Terms & Conditions</a>
+            <Link to="/gallery">Галерея</Link>
           </li>
         </ul>
       </div>
@@ -39,6 +37,4 @@ function Footer() {
   );
 }
 
-export default function () {
-  return <Footer />;
-}
+export default Footer;

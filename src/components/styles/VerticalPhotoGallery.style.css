@@ -1,0 +1,11 @@
+.vertical-photo-gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Размещаем контейнеры посередине */
+}
+
+/* Стили для контейнера фотографий */
+.photo-container {
+  margin-bottom: 20px; /* Расстояние между контейнерами фотографий */
+  width: 90%;
+}

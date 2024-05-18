@@ -1,27 +1,30 @@
-import { readPhoto } from "../api/photo";
 import { Link } from "react-router-dom";
+import { useQuery } from "react-query";
+import { readPhoto } from "../api/photo";
+import "./styles/PhotoContainer.style.css";
 
-export default function PhotoContainer({ photo, isCombined }) {
-  const [imageSrc, setImageSrc] = useState(null);
+export default function PhotoContainer({ photoId, isCombined }) {
+  const {
+    data: photo,
+    error,
+    isLoading,
+  } = useQuery(["photo", photoId], () => readPhoto(photoId));
 
-  useEffect(() => {
-    console.log("PhotoContainer useEffect started");
-    (async () => {
-      console.log("Reading photo", photo.id);
-      const response = await readPhoto(photo.id);
-      const blob = await response.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      setImageSrc(objectUrl);
-      console.log("Photo read, setting imageSrc", imageSrc);
-    })();
-    console.log("PhotoContainer useEffect finished");
-  }, [photo.id]);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading photo</div>;
+
+  const formattedDate = new Date(photo.createdAt).toLocaleDateString("ru-RU", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   const linkTarget = `/profile/${photo.user.id}`;
+
   return (
     <div className="photo-container">
       <Link to={linkTarget}>
-        <img src={imageSrc} alt={photo.title} />
+        <img src={photo.URL} alt={photo.description} />
         {isCombined && (
           <div className="photo-container__data-overlay">
             <div className="photo-container__description">
@@ -32,8 +35,17 @@ export default function PhotoContainer({ photo, isCombined }) {
       </Link>
       {!isCombined && (
         <div className="photo-container__data">
-          <div className="photo-container__description">
-            {photo.description}
+          {photo.description && (
+            <div className="photo-container__description">
+              {photo.description}
+            </div>
+          )}
+          <div className="photo-container__author">
+            Автор: {photo.user.login}
+          </div>
+
+          <div className="photo-container__create-date">
+            Загружено: {formattedDate}
           </div>
         </div>
       )}

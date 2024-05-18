@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PhotoViewer from "./PhotoViewer";
-import ReactModal from "react-modal";
 import CompressedPhotoContainer from "./CompressedPhotoContainer";
+import "./styles/CompressedPhotoGallery.style.css";
 
-export default function CompressedPhotoGallery({ photos }) {
+export default function CompressedPhotoGallery({ photos, set }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
@@ -17,25 +17,25 @@ export default function CompressedPhotoGallery({ photos }) {
     setSelectedPhoto(null);
   }
 
-  const compressedPhotos = photos.map((photo) => (
+  const compressedPhotos = photos?.map((photoId) => (
     <CompressedPhotoContainer
-      key={photo.id}
-      photo={photo}
-      onClick={() => handlePhotoClick(photo)}
+      key={photoId}
+      photoId={photoId}
+      onClick={(photo) => handlePhotoClick(photo)}
     />
   ));
 
   return (
-    <div>
+    <div className="compressed-photo-gallery">
       {compressedPhotos}
-      <ReactModal
-        isOpen={modalIsOpen}
-        onRequestClose={handleClose}
-        className="photo-viewer"
-        overlayClassName="photo-viewer-overlay"
-      >
-        <PhotoViewer photo={selectedPhoto} onClose={handleClose} />
-      </ReactModal>
+      {selectedPhoto && (
+        <PhotoViewer
+          isOpen={modalIsOpen}
+          photo={selectedPhoto}
+          onClose={handleClose}
+          set={set}
+        />
+      )}
     </div>
   );
 }

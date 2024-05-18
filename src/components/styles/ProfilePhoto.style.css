@@ -1,0 +1,11 @@
+.profile-photo-wrapper {
+  position: relative;
+  margin: 5vh 2vw;
+}
+
+.profile-photo {
+  width: 150px; /* Регулируйте размер фотографии по вашему желанию */
+  height: 150px; /* Регулируйте размер фотографии по вашему желанию */
+  border-radius: 50%;
+  cursor: pointer;
+}

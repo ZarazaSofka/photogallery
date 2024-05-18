@@ -1,0 +1,38 @@
+/* styles.css */
+
+/* Галерея фотографий */
+.compressed-photo-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin: 3vw;
+}
+
+/* Фотографии в галерее */
+.compressed-photo-container {
+  flex: 0 0 calc(33.33% - 20px); /* Три фотографии в ряду */
+  max-width: calc(33.33% - 20px);
+}
+
+/* Модальное окно */
+.photo-viewer-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-viewer-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+}

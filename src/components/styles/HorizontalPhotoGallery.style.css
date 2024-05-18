@@ -1,24 +1,48 @@
 .horizontal-photo-gallery {
-  overflow-x: auto;
-  white-space: nowrap;
+  margin: 20px 0;
+  height: 100%;
 }
 
-.gallery-wrapper {
+.slick-dots {
+  bottom: -30px;
+}
+
+.slick-dots li:hover button:before {
+  color: cadetblue;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #007bff;
+}
+
+.slick-track {
   display: flex;
-  overflow-x: auto;
+  align-items: center;
 }
 
-.gallery {
-  display: inline-flex;
-  flex-wrap: nowrap;
+.slick-arrow:focus {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.photo-wrapper {
-  margin-right: 1rem;
+.slick-arrow {
+  width: 40px;
+  height: 100%;
+  font-size: 0; /* Скрывает текст */
+  z-index: 1;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.3
+  ); /* Полупрозрачный фон для навигационных кнопок */
 }
 
-.photo {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
+.slick-prev:hover,
+.slick-next:hover {
+  background-color: rgba(
+    0,
+    123,
+    255,
+    0.5
+  ); /* Полупрозрачный фон при наведении */
 }

@@ -1,16 +1,19 @@
-import { changeProfilePhoto } from "../api/user";
-
 import { useMutation, useQueryClient } from "react-query";
+import ReactModal from "react-modal";
+import "./styles/ChangePhotoWindow.style.css";
+import { changeUserPhoto } from "../api/user";
+import { useUser } from "../auth";
 
-export default function ChangePhotoWindow({ user, onClose }) {
+export default function ChangePhotoWindow({ isOpen, onClose }) {
+  const { user } = useUser();
   const queryClient = useQueryClient();
   const mutation = useMutation(
-    ["changeProfilePhoto", user.id],
-    (formData) => changeProfilePhoto(user.id, formData),
+    ["profilePhoto", user.id],
+    (formData) => changeUserPhoto(user.id, formData),
     {
       onSuccess: () => {
         console.log("ChangePhotoWindow: successfully changed profile photo");
-        queryClient.invalidateQueries("profilePhoto");
+        queryClient.invalidateQueries(["profilePhoto", user.id]);
         onClose();
       },
     }
@@ -24,7 +27,12 @@ export default function ChangePhotoWindow({ user, onClose }) {
   };
 
   return (
-    <div className="change-photo-window">
+    <ReactModal
+      isOpen={isOpen}
+      className="change-photo-window"
+      overlayClassName="change-photo-window-overlay"
+      onRequestClose={onClose}
+    >
       <button className="close-button" onClick={onClose} />
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="change-photo-window__actions">
@@ -34,6 +42,7 @@ export default function ChangePhotoWindow({ user, onClose }) {
           <input
             id="file-input"
             type="file"
+            name="file"
             accept="image/*"
             className="change-photo-window__input"
           />
@@ -46,6 +55,6 @@ export default function ChangePhotoWindow({ user, onClose }) {
           </button>
         </div>
       </form>
-    </div>
+    </ReactModal>
   );
 }

@@ -1,41 +1,32 @@
 import { readPhoto } from "../api/photo";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import "./styles/PhotoContainer.style.css";
 
-export default function SetPhotoContainer({ photo, isCombined, set }) {
-  const [photoUrl, setPhotoUrl] = useState(null);
+export default function SetPhotoContainer({ isCombined, set, photoId }) {
+  const {
+    data: photo,
+    error,
+    isLoading,
+  } = useQuery(["photo", photoId], () => readPhoto(photoId));
 
-  useEffect(() => {
-    console.log("SetPhotoContainer useEffect started");
-    (async () => {
-      console.log("Reading photo", photo.id);
-      const response = await readPhoto(photo.id);
-      const blob = await response.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      setPhotoUrl(objectUrl);
-      console.log("Photo read, setting photoUrl", photoUrl);
-    })();
-    console.log("SetPhotoContainer useEffect finished");
-  }, [photo.id]);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading photo</div>;
 
   const linkTarget = `/set/${set.id}`;
+
   return (
     <div className="photo-container">
       <Link to={linkTarget}>
-        <img src={photoUrl} alt={photo.title} />
+        <img src={photo.URL} alt={photo.description} />
         {isCombined && (
           <div className="photo-container__data-overlay">
-            <div className="photo-container__description">
-              {photo.description}
-            </div>
             <div className="photo-container__set-name">{set.name}</div>
           </div>
         )}
       </Link>
       {!isCombined && (
         <div className="photo-container__data">
-          <div className="photo-container__description">
-            {photo.description}
-          </div>
           <div className="photo-container__set-name">{set.name}</div>
         </div>
       )}

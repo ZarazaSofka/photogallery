@@ -1,0 +1,24 @@
+.compressed-photo-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.compressed-photo-container img {
+  width: 100%; /* Фотографии должны заполнять контейнер полностью */
+  height: auto;
+  display: block;
+
+  border-radius: 8px; /* Закругление углов */
+  border: 2px solid transparent; /* Прозрачная рамка */
+  transition: border-color 0.3s ease; /* Плавное изменение цвета рамки */
+
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.compressed-photo-container:hover img {
+  transform: scale(1.05);
+  border-color: #007bff; /* Цвет рамки при наведении */
+}

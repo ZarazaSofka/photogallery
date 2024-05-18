@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RegisterForm from "../components/RegisterForm";
 import LoginForm from "../components/LoginForm";
+import "./styles/AuthPage.style.css";
 
 export default function AuthPage() {
   const [isRegister, setIsRegister] = useState(false);
@@ -11,7 +12,7 @@ export default function AuthPage() {
   return (
     <div>
       <Header user={null} />
-      <div className="container">
+      <div className="auth-container">
         <div className="buttons">
           <button
             className={isRegister ? "active" : ""}

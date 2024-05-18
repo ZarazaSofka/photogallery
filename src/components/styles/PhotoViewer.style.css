@@ -1,0 +1,138 @@
+.photo-viewer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 80%;
+  max-height: 80%;
+  overflow: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.photo-viewer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.photo-viewer__photo {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+.photo-viewer__info {
+  margin-top: 20px;
+}
+
+.photo-viewer__author {
+  text-decoration: none;
+  color: #333;
+}
+
+.photo-viewer__description {
+  margin: 10px 0;
+}
+
+.photo-viewer__actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.like-button,
+.delete-button {
+  padding: 8px 16px;
+  border: 2px solid #000;
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
+  border-radius: 4px;
+  outline: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.like-button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.delete-button {
+  background-color: #ff0000;
+  border: 2px solid #a61616;
+  color: #fff;
+}
+
+.like-button:hover {
+  background-color: blue;
+  color: #fff;
+}
+
+.delete-button:hover {
+  background-color: brown;
+  color: #fff;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.close-button:before,
+.close-button:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 2px;
+  background-color: #333;
+  transform-origin: 50% 50%;
+}
+
+.close-button:before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-button:after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.add-to-set-button,
+.delete-from-set-button {
+  padding: 8px 16px;
+  border: 2px solid #298929;
+  background-color: #57de57;
+  color: #000;
+  cursor: pointer;
+  border-radius: 4px;
+  outline: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.delete-from-set-button {
+  background-color: #9acb1c;
+  border: 2px solid #365909;
+}
+.add-to-set-button:hover {
+  background-color: #298929;
+  color: #fff;
+}
+.delete-from-set-button:hover {
+  background-color: #365909;
+  color: #fff;
+}

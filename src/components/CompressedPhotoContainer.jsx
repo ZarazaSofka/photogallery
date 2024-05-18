@@ -1,17 +1,15 @@
-import { readCompressedPhoto } from "../api/photo";
-
+import { readPhoto } from "../api/photo";
 import { useQuery } from "react-query";
+import "./styles/CompressedPhotoContainer.style.css";
 
-export default function CompressedPhotoContainer({ photo, onClick }) {
-  const { data, isLoading } = useQuery(
-    ["compressedPhoto", photo.id],
-    () => readCompressedPhoto(photo.id),
-    { keepPreviousData: true }
+export default function CompressedPhotoContainer({ photoId, onClick }) {
+  const { data: photo, isLoading } = useQuery(["photo", photoId], () =>
+    readPhoto(photoId)
   );
 
-  console.log("CompressedPhotoContainer: render", photo.id);
+  console.log("CompressedPhotoContainer: render", photoId);
   console.log("CompressedPhotoContainer: isLoading", isLoading);
-  console.log("CompressedPhotoContainer: data", data);
+  console.log("CompressedPhotoContainer: data", photo);
 
   if (isLoading) {
     console.log("CompressedPhotoContainer: render loading...");
@@ -19,8 +17,8 @@ export default function CompressedPhotoContainer({ photo, onClick }) {
   }
 
   return (
-    <div className="compressed-photo-container" onClick={onClick}>
-      <img src={URL.createObjectURL(data)} alt={photo.title} />
+    <div className="compressed-photo-container" onClick={() => onClick(photo)}>
+      <img src={photo.URL} alt={photo.description} />
     </div>
   );
 }

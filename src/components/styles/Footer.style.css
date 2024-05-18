@@ -1,0 +1,42 @@
+footer {
+  background-color: #f8f9fa;
+  padding: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.row {
+  margin-bottom: 10px;
+}
+
+.row a {
+  margin-right: 10px;
+  color: #333;
+}
+
+.row a:hover {
+  color: #007bff;
+}
+
+.row ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.row ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.row ul li:last-child {
+  margin-right: 0;
+}
+
+.row ul li a {
+  color: #333;
+  text-decoration: none;
+}
+
+.row ul li a:hover {
+  color: #007bff;
+}

@@ -1,0 +1,61 @@
+.photo-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+}
+
+.photo-container > a {
+  width: 100%;
+}
+
+.photo-container img {
+  width: 100%;
+  height: auto;
+  margin: auto;
+}
+
+.photo-container__data-overlay,
+.photo-container__data {
+  position: absolute;
+  bottom: 0; /* Начальная позиция внизу */
+  left: 0;
+  width: 100%;
+
+  background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
+  color: antiquewhite;
+}
+.photo-container__data-overlay {
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease, bottom 0.3s ease; /* Плавный переход */
+}
+
+.photo-container__data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.photo-container:hover .photo-container__data-overlay {
+  opacity: 1;
+  bottom: 0; /* Смещение overlay вверх */
+}
+
+.photo-container__description,
+.photo-container__set-name {
+  font-size: 20px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.photo-container__description:hover,
+.photo-container__set-name:hover {
+  text-decoration: underline;
+}
