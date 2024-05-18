@@ -1,47 +1,47 @@
 import React, { useState } from "react";
 import ReactModal from "react-modal";
 import { useQuery, useMutation } from "react-query";
-import { api } from "../api/api";
-import Button from "../components/Button";
+import { deleteUser, updateUser, readUsers } from "../api/user";
 import "./styles/AdminPage.style.css";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function AdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userIdToUpdate, setUserIdToUpdate] = useState(null);
   const [userDataToUpdate, setUserDataToUpdate] = useState({
+    id: "",
     login: "",
     email: "",
   });
+
   const {
     data: users,
     isLoading,
     isError,
     refetch,
-  } = useQuery("users", () => api.get("/users"), {
+  } = useQuery("users", () => readUsers(), {
     onError: (error) => console.error(error),
   });
-  const updateUser = useMutation((data) => api.put(`/${data.id}`, data));
-  const deleteUser = useMutation((userId) => api.delete(`/${userId}`));
+
+  const updateUserMutation = useMutation((data) => updateUser(data), {
+    onSuccess: () => refetch(),
+  });
+  const deleteUserMutation = useMutation((userId) => deleteUser(userId), {
+    onSuccess: () => refetch(),
+  });
 
   const handleOpenModal = (userId) => {
     setIsModalOpen(true);
-    setUserIdToUpdate(userId);
     setUserDataToUpdate(users.find((user) => user.id === userId));
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setUserIdToUpdate(null);
-    setUserDataToUpdate({ login: "", email: "" });
+    setUserDataToUpdate({ id: "", login: "", email: "" });
   };
 
   const handleUpdateUser = () => {
-    updateUser.mutate({ id: userIdToUpdate, ...userDataToUpdate });
-    handleCloseModal();
-  };
-
-  const handleDeleteUser = () => {
-    deleteUser.mutate(userIdToUpdate);
+    updateUserMutation.mutate(userDataToUpdate);
     handleCloseModal();
   };
 
@@ -49,7 +49,9 @@ export default function AdminPage() {
     <>
       <Header />
       <div className="admin-page">
-        <Button onClick={refetch}>Обновить</Button>
+        <button className="admin-page__refresh-button" onClick={refetch}>
+          Обновить
+        </button>
         <table className="admin-page__table">
           <thead>
             <tr>
@@ -81,10 +83,16 @@ export default function AdminPage() {
                     )}
                   </td>
                   <td>
-                    <button onClick={() => handleOpenModal(user.id)}>
+                    <button
+                      className="admin-page__update-button"
+                      onClick={() => handleOpenModal(user.id)}
+                    >
                       Обновить
                     </button>
-                    <button onClick={() => deleteUser.mutate(user.id)}>
+                    <button
+                      className="admin-page__delete-button"
+                      onClick={() => deleteUserMutation.mutate(user.id)}
+                    >
                       Удалить
                     </button>
                   </td>
@@ -97,6 +105,8 @@ export default function AdminPage() {
           isOpen={isModalOpen}
           onRequestClose={handleCloseModal}
           className="admin-page__modal"
+          overlayClassName="admin-page__modal-overlay"
+          appElement={document.getElementById("root")}
         >
           <h2>Обновление пользователя</h2>
           <label>
@@ -110,6 +120,7 @@ export default function AdminPage() {
                   login: e.target.value,
                 }))
               }
+              className="admin-page__input"
             />
           </label>
           <label>
@@ -123,11 +134,21 @@ export default function AdminPage() {
                   email: e.target.value,
                 }))
               }
+              className="admin-page__input"
             />
           </label>
-          <Button onClick={handleUpdateUser}>Обновить</Button>
-          <Button onClick={handleDeleteUser}>Удалить</Button>
-          <Button onClick={handleCloseModal}>Отмена</Button>
+          <button
+            onClick={handleUpdateUser}
+            className="admin-page__submit-button"
+          >
+            Обновить
+          </button>
+          <button
+            onClick={handleCloseModal}
+            className="admin-page__cancel-button"
+          >
+            Отмена
+          </button>
         </ReactModal>
       </div>
       <Footer />

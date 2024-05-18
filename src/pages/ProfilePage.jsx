@@ -2,21 +2,27 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import ProfilePhoto from "../components/ProfilePhoto";
 import { useQuery, useQueryClient } from "react-query";
-import { useParams, Link } from "react-router-dom";
-import { readUser } from "../api/user";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { readUser, deleteUser } from "../api/user";
 import { readUserPhotos } from "../api/photo";
 import { readUserSets } from "../api/set";
 import Footer from "../components/Footer";
 import CompressedPhotoGallery from "../components/CompressedPhotoGallery";
 import AddPhotoWindow from "../components/AddPhotoWindow";
 import CreateSetWindow from "../components/CreateSetWindow";
-import { isMe, useUser } from "../auth";
+import {
+  isMe,
+  isMeOrAdmin,
+  useUser,
+  deleteUserFromLocalStorage,
+} from "../auth";
 import "./styles/ProfilePage.style.css";
 
 export default function ProfilePage() {
-  const { user } = useUser();
+  const { user, updateUser } = useUser();
   const { userId } = useParams();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: profileData } = useQuery(
     ["user", userId],
@@ -60,6 +66,23 @@ export default function ProfilePage() {
     ]);
   };
 
+  const handleDelete = async () => {
+    try {
+      if (window.confirm("Вы уверены, что хотите удалить аккаунт?")) {
+        await deleteUser(userId);
+        deleteUserFromLocalStorage();
+        updateUser(null);
+        queryClient.removeQueries(["user", userId]);
+        queryClient.removeQueries(["userSets", userId]);
+        queryClient.removeQueries(["userPhotos", userId]);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Не получилось удалить аккаунт");
+    }
+  };
+
   return (
     <>
       <Header />
@@ -69,20 +92,33 @@ export default function ProfilePage() {
           <div className="profile-data-container__login">
             {profileData?.login ?? "User not found"}
           </div>
-          {isMe(user, userId) && (
+          {isMeOrAdmin(user, userId) && (
             <div className="profile-data-container__buttons">
-              <button
-                onClick={() => setIsAddPhotoWindowOpen(!isAddPhotoWindowOpen)}
-                сlassName="add-photo-button"
-              >
-                Добавить фотографию
-              </button>
-              <button
-                onClick={() => setIsCreateSetWindowOpen(!isCreateSetWindowOpen)}
-                сlassName="create-set-button"
-              >
-                Создать набор
-              </button>
+              {isMe(user, userId) && (
+                <div className="profile-data-container__buttons-photo">
+                  <button
+                    onClick={() =>
+                      setIsAddPhotoWindowOpen(!isAddPhotoWindowOpen)
+                    }
+                    сlassName="add-photo-button"
+                  >
+                    Добавить фотографию
+                  </button>
+                  <button
+                    onClick={() =>
+                      setIsCreateSetWindowOpen(!isCreateSetWindowOpen)
+                    }
+                    сlassName="create-set-button"
+                  >
+                    Создать набор
+                  </button>
+                </div>
+              )}
+              <div className="profile-data-container__buttons-user">
+                <button onClick={handleDelete} сlassName="delete-user-button">
+                  Удалить аккаунт
+                </button>
+              </div>
             </div>
           )}
         </div>

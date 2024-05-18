@@ -56,7 +56,7 @@ export default function LoginForm() {
         />
       </label>
       <button type="submit" className="submit-button">
-        Login
+        Войти
       </button>
     </form>
   );

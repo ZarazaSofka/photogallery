@@ -10,8 +10,8 @@ import ProfilePage from "./pages/ProfilePage";
 import AuthPage from "./pages/AuthPage";
 import PhotoSetPage from "./pages/PhotoSetPage";
 import PhotoGalleryPage from "./pages/PhotoGalleryPage";
-import { isAuthenticated, useUser } from "./auth";
-import Logout from "./components/Logout";
+import { hasRole, isAuthenticated, useUser } from "./auth";
+import AdminPage from "./pages/AdminPage";
 
 export default function AppRouter() {
   const { user } = useUser();
@@ -23,13 +23,13 @@ export default function AppRouter() {
         <Route path="/profile/:userId" element={<ProfilePage />} />
         <Route path="/set/:setId" element={<PhotoSetPage />} />
         <Route
-          path="/logout"
-          element={isAuthenticated(user) ? <Logout /> : <Navigate to="/auth" />}
-        />
-        <Route
           path="/auth"
           element={isAuthenticated(user) ? <Navigate to="/" /> : <AuthPage />}
         />
+        {hasRole(user, "ROLE_ADMIN") && (
+          <Route path="/users" element={<AdminPage />} />
+        )}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

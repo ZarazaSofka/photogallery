@@ -6,11 +6,15 @@ export function isAuthenticated(user) {
 }
 
 export function hasRole(user, role) {
-  return user?.roles?.includes(role);
+  return user?.rights?.includes(role);
 }
 
 export function isMe(user, userId) {
   return user?.id === userId;
+}
+
+export function isMeOrAdmin(user, userId) {
+  return isMe(user, userId) || hasRole(user, "ROLE_ADMIN");
 }
 
 const secretKey = "yourSecretKey";

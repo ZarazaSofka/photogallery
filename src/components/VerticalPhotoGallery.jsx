@@ -12,7 +12,7 @@ const VerticalPhotoGallery = ({ photos, onLoadMore, canLoadMore, loading }) => {
     ) {
       onLoadMore();
     }
-  }, [loading, onLoadMore]);
+  }, [loading, onLoadMore, canLoadMore]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);

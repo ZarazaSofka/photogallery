@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { likePhoto, deletePhoto } from "../api/photo";
 import { deletePhotoFromSet } from "../api/set";
-import { isAuthenticated, isMe, useUser } from "../auth";
+import { isAuthenticated, isMe, isMeOrAdmin, useUser } from "../auth";
 import { useQueryClient } from "react-query";
 import ReactModal from "react-modal";
 import ChooseSetWindow from "./ChooseSetWindow";
@@ -113,7 +113,7 @@ export default function PhotoViewer({ isOpen, photo, onClose, set }) {
                 Удалить из набора
               </button>
             )}
-            {isMe(user, photo.user.id) && (
+            {isMeOrAdmin(user, photo.user.id) && (
               <button onClick={handleDelete} className="delete-button">
                 Удалить
               </button>

@@ -25,6 +25,22 @@ export const readUser = async (userId) => {
   }
 };
 
+export const readUsers = async () => {
+  try {
+    const response = await api.get(`/`);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Ошибка при получении данных пользователей:",
+      error.response || error.message
+    );
+    throw new Error(
+      "Не удалось получить данные пользователей. Попробуйте снова."
+    );
+  }
+};
+
 export const register = async (user) => {
   try {
     const response = await api.post("/register", user);
@@ -57,7 +73,7 @@ export const login = async (user) => {
 
 export const updateUser = async (userToUpdate) => {
   try {
-    const response = await api.put("/", userToUpdate);
+    const response = await api.put(`/${userToUpdate.id}`, userToUpdate);
     console.log(response);
     return response.data;
   } catch (error) {

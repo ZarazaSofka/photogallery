@@ -31,7 +31,7 @@ const Header = () => {
           {isAuthenticated(user) && (
             <Link to={`/profile/${user.id}`}>Профиль</Link>
           )}
-          {hasRole(user, "ROLE_ADMIN") && <Link to="/support">Поддержка</Link>}
+          {hasRole(user, "ROLE_ADMIN") && <Link to="/users">Пользователи</Link>}
           {!isAuthenticated(user) && <Link to="/auth">Войти</Link>}
           {isAuthenticated(user) && (
             <Link to="#" onClick={handleLogout}>
